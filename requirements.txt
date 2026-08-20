@@ -1,0 +1,7 @@
+# 浏览器自动化。Python 3.13/3.14 请用 1.49 以上版本（旧版依赖的 greenlet 没有对应 wheel）
+playwright>=1.49
+
+# 全自动签到（--checkin-auto）的首选路径用它取 Turnstile 令牌，约 14 秒/账号。
+# 装完还要下浏览器：python -m cloakbrowser install（562MB，缓存在 ~/.cloakbrowser）。
+# 浏览器没下好的话工具会自动退回 cdpclick.py（裸 Chrome + CDP 短连，约 25 秒/账号），功能不缺。
+cloakbrowser>=0.5.8

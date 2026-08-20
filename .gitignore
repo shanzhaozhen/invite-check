@@ -1,0 +1,30 @@
+# 运行时数据（含密码 / TOTP 密钥 / API Key / 会话 cookie，绝对不要提交）
+data/
+logs/
+sessions/
+exports/
+error.log
+*.zip
+
+# 本地工具配置（含本机绝对路径）
+.claude/
+
+# 打包产物
+dist/
+build/
+*.spec
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# 编辑器 / 系统
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
+
+docs/
+CLAUDE.md

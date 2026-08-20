@@ -1,0 +1,48 @@
+name: turnstile-probe
+
+# 只验证一件事：GitHub Actions 这台机器（数据中心 IP）能不能拿到站点的 Turnstile 令牌。
+# 不带任何凭证、不签到、不碰账号数据——纯只读探测。
+# 手动触发（Actions 页面点 Run workflow），也可以改成 schedule 定时。
+
+on:
+  workflow_dispatch:
+    inputs:
+      site:
+        description: 站点域名（**填你自己的**，例如 example.com；默认那个是占位的，跑不通）
+        required: true
+        default: site-b.example
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: 装依赖
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: 装 Chromium 需要的系统库
+        run: python -m playwright install-deps chromium
+
+      # 207MB 的 Linux 版反检测 Chromium，缓存起来省得每次下
+      - name: 缓存 CloakBrowser 浏览器
+        uses: actions/cache@v4
+        with:
+          path: ~/.cloakbrowser
+          key: cloakbrowser-linux-x64-146.0.7680.177.5
+
+      - name: 下 CloakBrowser 浏览器（缓存命中就秒过）
+        run: python -m cloakbrowser install
+
+      - name: 对照组：官方测试 sitekey（这个都不过说明环境有问题）
+        run: python solve_probe.py "${{ inputs.site || 'site-b.example' }}" --testkey
+
+      - name: 正题：站点真实 sitekey
+        run: python solve_probe.py "${{ inputs.site || 'site-b.example' }}"

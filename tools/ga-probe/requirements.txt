@@ -1,0 +1,3 @@
+# 内容和主项目的 requirements.txt 一样，单独放一份是为了让这个探测目录能独立丢到别的仓库里跑
+playwright>=1.49
+cloakbrowser>=0.5.8
